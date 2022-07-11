@@ -1,6 +1,6 @@
 # It's a small php project
 
-Small php project to check after my working hours
+Small php project to checkout working hours
 
 ## Author
 
