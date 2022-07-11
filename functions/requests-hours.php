@@ -19,8 +19,11 @@
         $hout = $_POST['hout'];
         $hdate = $_POST['hdate'];
         $huser = $_POST['huser'];  
+<<<<<<< HEAD
         $company_name = $_POST['u_company_name'];  
         
+=======
+>>>>>>> 9bf346e7a8b424d718571d5bcbfa74a13e6e3269
         
         $pieces = explode("-", $hdate);
         $year = $pieces[0];
@@ -30,7 +33,11 @@
 
         // Check if the month of the date already exist
 
+<<<<<<< HEAD
         $sql = "SELECT h_date FROM management_hours WHERE h_date = '$hdate' AND h_user = '$huser' AND h_company_name = '$company_name' ";
+=======
+        $sql = "SELECT h_date FROM management_hours WHERE h_date = '$hdate' AND h_user = '$huser' ";
+>>>>>>> 9bf346e7a8b424d718571d5bcbfa74a13e6e3269
         $result = mysqli_query($db,$sql);
         $row = mysqli_fetch_array($result,MYSQLI_ASSOC);
         $count = mysqli_num_rows($result);
@@ -40,7 +47,11 @@
         break;
         } 
         
+<<<<<<< HEAD
         $sql = "INSERT INTO management_hours (h_in, h_out, h_date, monthOfHours, yearOfHours, h_user, h_company_name) VALUES ('$hin','$hout','$hdate','$month','$year','$huser', '$company_name')";
+=======
+        $sql = "INSERT INTO management_hours (h_in, h_out, h_date, monthOfHours, yearOfHours, h_user) VALUES ('$hin','$hout','$hdate','$month','$year','$huser')";
+>>>>>>> 9bf346e7a8b424d718571d5bcbfa74a13e6e3269
           if (mysqli_query($db, $sql)) {
             $last_id = $db->insert_id;            
             $thisWorkday = array($last_id,$hdate, $hin, $hout, $huser);
@@ -51,6 +62,7 @@
   
       break;
 
+<<<<<<< HEAD
       case "get_all_companies":  
                
         $huser = $_POST['huser'];         
@@ -224,14 +236,21 @@
 
       
 
+=======
+>>>>>>> 9bf346e7a8b424d718571d5bcbfa74a13e6e3269
           // Post - Delete Hours
   
       case "delete_hours":              
 
         $h_id = $_POST['h_id'];
+<<<<<<< HEAD
         $cname = $_POST['company_name'];      
 
         $sql = "DELETE FROM management_hours WHERE h_id = '$h_id' AND h_company_name = '$cname'";
+=======
+
+        $sql = "DELETE FROM management_hours WHERE h_id = '$h_id'";
+>>>>>>> 9bf346e7a8b424d718571d5bcbfa74a13e6e3269
 
         if ($db->query($sql) === TRUE) {
           echo "Record deleted successfully";
@@ -250,11 +269,18 @@
         $hid = $_POST['hid'];
         $hin = $_POST['hin'];
         $hout = $_POST['hout'];      
+<<<<<<< HEAD
         $cname = $_POST['company_name'];      
         
 
         // Check if the month of the date already exist
         $sql = "UPDATE management_hours SET h_in='$hin', h_out='$hout' WHERE h_id = '$hid' AND h_company_name = '$cname'";    
+=======
+        
+
+        // Check if the month of the date already exist
+        $sql = "UPDATE management_hours SET h_in='$hin', h_out='$hout' WHERE h_id = '$hid'";    
+>>>>>>> 9bf346e7a8b424d718571d5bcbfa74a13e6e3269
 
         if (mysqli_query($db, $sql)) {
           unset($thisWorkdayUpdate);          
@@ -289,14 +315,23 @@
       $u_id = $_GET["uid"];
       $chosenMonth = $_GET["chosenMonth"];
       $chosenYear = $_GET["chosenYear"];
+<<<<<<< HEAD
       $companyName = $_GET["companyName"];
       
       $sql = "SELECT * FROM management_hours WHERE h_user = '$u_id' AND monthOfHours = '$chosenMonth' AND yearOfHours = '$chosenYear' AND h_company_name = '$companyName' ORDER BY h_date ASC";
+=======
+      
+      $sql = "SELECT * FROM management_hours WHERE h_user = '$u_id' AND monthOfHours = '$chosenMonth' AND yearOfHours = '$chosenYear' ORDER BY h_date ASC";
+>>>>>>> 9bf346e7a8b424d718571d5bcbfa74a13e6e3269
       $result = $db->query($sql);
       unset($allHours);
       $allHours = array();
       if ($result->num_rows > 0) {
+<<<<<<< HEAD
         // output data of each row        
+=======
+        // output data of each row
+>>>>>>> 9bf346e7a8b424d718571d5bcbfa74a13e6e3269
         while($row = $result->fetch_assoc()) {
           $theRow = array($row["h_id"] , $row["h_date"], $row["h_in"], $row["h_out"], $row["h_user"]);          
           array_push($allHours,$theRow);          
@@ -306,6 +341,7 @@
         echo "0 results";
       }
 
+<<<<<<< HEAD
       break;
       
       
@@ -340,6 +376,9 @@
 
 
 
+=======
+      break;    
+>>>>>>> 9bf346e7a8b424d718571d5bcbfa74a13e6e3269
 
     default:
     echo "sorry, request not found!";

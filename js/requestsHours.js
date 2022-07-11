@@ -5,16 +5,20 @@ let hoursLeftToDo = document.getElementById("hoursLeftToDo");
 let hoursIDid = document.getElementById("hoursIDid"); 
 let chosenMonth = document.getElementById("months");
 let chosenYear = document.getElementById("years");
+<<<<<<< HEAD
 let freeDaysIHave = document.getElementById("freeDaysIHave"); 
 let freeDaysIDid = document.getElementById("freeDaysIDid"); 
 let sickDaysIHave = document.getElementById("sickDaysIHave"); 
 let sickDaysIDid = document.getElementById("sickDaysIDid");
 
+=======
+>>>>>>> 9bf346e7a8b424d718571d5bcbfa74a13e6e3269
 let daysCounter, hoursCounter;
 let getDaysInMonth = function(month,year) {  
  return new Date(year, month, 0).getDate();
 };
 
+<<<<<<< HEAD
 let totalMonthlyWorkingHours;
 
 let totalTimeOfWorking = localStorage.getItem("totalWorkingHours");
@@ -80,6 +84,15 @@ function getWorkdaysByDates(uid, month, year){
     getWorkdays(uid, chosenMonth.value, chosenYear.value, theCompanyName);
   } else {    
     getWorkdays(uid, month, year, theCompanyName);    
+=======
+let totalMonthlyWorkingHours = Math.floor((getDaysInMonth(parseInt(chosenMonth.value), parseInt(chosenYear.value)) - 8) * 8);
+
+function getWorkdaysByDates(uid, month, year){
+  if(month == 0 || year == 0){
+    getWorkdays(uid, chosenMonth.value, chosenYear.value);
+  } else {    
+    getWorkdays(uid, month, year);    
+>>>>>>> 9bf346e7a8b424d718571d5bcbfa74a13e6e3269
   }  
 }
 
@@ -91,6 +104,7 @@ function selectOption(month, year) {
 }
 
 
+<<<<<<< HEAD
 function howManySickDaysIHave(){ 
 
   let companyName = document.getElementById("theCompanyName").innerText;   
@@ -131,10 +145,15 @@ function howManyFreeDaysIHave(){
 
 
 function updateCounters(MontlyHours, hoursDidAlready, HoursLeft, DaysOfWorkNumber, freeDays, freeDaysUsed, sickDays, sickDaysUsed){   
+=======
+
+function updateCounters(MontlyHours, hoursDidAlready, HoursLeft, DaysOfWorkNumber){   
+>>>>>>> 9bf346e7a8b424d718571d5bcbfa74a13e6e3269
   let hoursOfWork = document.getElementById("hoursOfWork");
   let daysOfWork = document.getElementById("daysOfWork");
   let hoursLeftToDo = document.getElementById("hoursLeftToDo");
   let hoursIDid = document.getElementById("hoursIDid");
+<<<<<<< HEAD
   let precentOfTime = document.getElementById("precentOfTime"); 
   let freeDaysIHave = document.getElementById("freeDaysIHave"); 
   let freeDaysIDid = document.getElementById("freeDaysIDid"); 
@@ -142,20 +161,27 @@ function updateCounters(MontlyHours, hoursDidAlready, HoursLeft, DaysOfWorkNumbe
   let sickDaysIDid = document.getElementById("sickDaysIDid"); 
   
   
+=======
+  let precentOfTime = document.getElementById("precentOfTime");  
+>>>>>>> 9bf346e7a8b424d718571d5bcbfa74a13e6e3269
 
   hoursOfWork.innerText = MontlyHours;
   daysOfWork.innerText = DaysOfWorkNumber;
   hoursLeftToDo.innerText = HoursLeft;
   hoursIDid.innerText = hoursDidAlready;  
+<<<<<<< HEAD
   freeDaysIHave.innerText = freeDays;  
   freeDaysIDid.innerText = freeDaysUsed;  
   sickDaysIHave.innerText = sickDays;  
   sickDaysIDid.innerText = sickDaysUsed;  
+=======
+>>>>>>> 9bf346e7a8b424d718571d5bcbfa74a13e6e3269
   precentOfTime.setAttribute("style", "width:" +  Math.round(hoursDidAlready/MontlyHours * 100) + "%");
   precentOfTime.setAttribute("aria-valuenow", Math.round(hoursDidAlready/MontlyHours * 100));
   
 }
 
+<<<<<<< HEAD
 // how many Sick Days I see
 
 function howManySickDaysISee() {
@@ -171,10 +197,14 @@ function howManySickDaysISee() {
   } 
   return count;
 }
+=======
+
+>>>>>>> 9bf346e7a8b424d718571d5bcbfa74a13e6e3269
 
 
 // Get Hours
 
+<<<<<<< HEAD
 function getWorkdays(u_user, month, year, companyName){  
   let myHours = document.getElementById("myHours");    
   var xhttp = new XMLHttpRequest();  
@@ -185,6 +215,19 @@ function getWorkdays(u_user, month, year, companyName){
     myHours.innerHTML = '';    
     if(this.responseText !== "0 results"){ 
     let rounds = JSON.parse(this.responseText).length ;        
+=======
+function getWorkdays(u_user, month, year){  
+  let myHours = document.getElementById("myHours");    
+  var xhttp = new XMLHttpRequest();
+  let url = "./functions/requests-hours.php?getInfo=get_hours&uid=" + u_user + "&chosenMonth=" + month + "&chosenYear=" + year;      
+  xhttp.open("GET", url, true);
+  xhttp.onreadystatechange = function() {
+  if (this.readyState == 4 && this.status == 200) { 
+    myHours.innerHTML = '';    
+    if(this.responseText !== "0 results"){ 
+    let rounds = JSON.parse(this.responseText).length ;    
+    console.log(JSON.parse(this.responseText));
+>>>>>>> 9bf346e7a8b424d718571d5bcbfa74a13e6e3269
     for(k = 0; k < rounds; k++){      
       let hid = JSON.parse(this.responseText)[k][0];      
       let hdate = JSON.parse(this.responseText)[k][1];
@@ -197,7 +240,11 @@ function getWorkdays(u_user, month, year, companyName){
 
   let timeIdid = howMuchTimeIDid();
   let monthlyWorkingHours = totalMonthlyWorkingHours - howMuchTimeIDid();
+<<<<<<< HEAD
   let numOfRows = document.getElementById("myHours").rows.length - howManySickDaysISee();
+=======
+  let numOfRows = document.getElementById("myHours").rows.length;
+>>>>>>> 9bf346e7a8b424d718571d5bcbfa74a13e6e3269
 
   if(this.responseText === "0 results")  {    
     timeIdid = 0;
@@ -206,7 +253,11 @@ function getWorkdays(u_user, month, year, companyName){
   }
     
     
+<<<<<<< HEAD
     updateCounters(totalMonthlyWorkingHours,  timeIdid , monthlyWorkingHours , numOfRows, howManyFreeDaysIHave(), howMuchFreeDaysIDid(), howManySickDaysIHave(), howMuchSickDaysIDid());
+=======
+    updateCounters(totalMonthlyWorkingHours,  timeIdid , monthlyWorkingHours , numOfRows);
+>>>>>>> 9bf346e7a8b424d718571d5bcbfa74a13e6e3269
   }}; 
   
   xhttp.send();
@@ -222,20 +273,35 @@ function createTable(hid, hdate, hin, hout, uid){
       let td1 = document.createElement("td");
       td1.append(hdate);
 
+<<<<<<< HEAD
       
       let td2 = document.createElement("td");
       td2.append(hin);
       
       let td3 = document.createElement("td");
       td3.append(hout);     
+=======
+      let td2 = document.createElement("td");
+      td2.append(hin);
+
+      let td3 = document.createElement("td");
+      td3.append(hout);      
+
+>>>>>>> 9bf346e7a8b424d718571d5bcbfa74a13e6e3269
                   
       calculateHours(hin, hout);     
       
       let td4 = document.createElement("td");
+<<<<<<< HEAD
       td4.append(totalTimeYouDid);
 
       let td5 = document.createElement("td");
       if(totalTimeYouDid !== "Sick Day" && totalTimeYouDid !== "Free Day"){        
+=======
+      td4.append(totleTimeYouDid);
+
+      let td5 = document.createElement("td");
+>>>>>>> 9bf346e7a8b424d718571d5bcbfa74a13e6e3269
       td5.className = "pointer";
       td5.setAttribute("data-toggle", "modal");
       td5.setAttribute("data-target", "#theFixer");      
@@ -245,6 +311,7 @@ function createTable(hid, hdate, hin, hout, uid){
       let td5i = document.createElement("i");
       td5i.className = "fas fa-pencil-alt";      
       td5.append(td5i);
+<<<<<<< HEAD
       }
       else if (totalTimeYouDid === "Sick Day") {      
         let td5i = document.createElement("i");
@@ -255,6 +322,8 @@ function createTable(hid, hdate, hin, hout, uid){
         td5i.className = "far fa-smile-beam";      
         td5.append(td5i);
       }    
+=======
+>>>>>>> 9bf346e7a8b424d718571d5bcbfa74a13e6e3269
 
       let td6 = document.createElement("td");
       td6.className = "pointer";
@@ -277,6 +346,7 @@ function createTable(hid, hdate, hin, hout, uid){
 }
 
 
+<<<<<<< HEAD
 function howMuchSickDaysIDid(){
   let arrayOfSickDays = [];
   let x = 0, checkText ,sumSickDays = 0;   
@@ -311,12 +381,15 @@ function howMuchFreeDaysIDid(){
 }
 
 
+=======
+>>>>>>> 9bf346e7a8b424d718571d5bcbfa74a13e6e3269
 
 function howMuchTimeIDid(){
   let arrayOfHours = [];
   let x, splitTds,number,totalnumber = 0, sumHours;   
   for(i = 1; i < document.getElementById("myHours").rows.length + 1; i++){
   x = document.getElementById("theTableOfHours").rows[i].cells[3].innerText;
+<<<<<<< HEAD
   if(x === "Sick Day"){    
     number = 0;
   } else if (x === "Free Day"){    
@@ -325,11 +398,18 @@ function howMuchTimeIDid(){
     splitTds = x.split(" ");    
     number = splitTds[0] * 60 * 60 + splitTds[2] * 60;
   }  
+=======
+  splitTds = x.split(" ");
+  number = splitTds[0] * 60 * 60 + splitTds[2] * 60;
+>>>>>>> 9bf346e7a8b424d718571d5bcbfa74a13e6e3269
   arrayOfHours.push(number);
   }  
   totalnumber = arrayOfHours.reduce((a, b) => a + b, 0);
   sumHours = Math.floor((totalnumber / 60) / 60);
+<<<<<<< HEAD
   
+=======
+>>>>>>> 9bf346e7a8b424d718571d5bcbfa74a13e6e3269
   return sumHours;  
 }
 
@@ -337,6 +417,7 @@ function calculateHours(hin, hout){
       let hinHowMuchTime = hin.split(":");      
       let hinSeconds = (parseInt(hinHowMuchTime[0]) * 60 * 60) + (parseInt(hinHowMuchTime[1]) * 60);
       let houtHowMuchTime = hout.split(":");
+<<<<<<< HEAD
       let houtSeconds = (parseInt(houtHowMuchTime[0]) * 60 * 60) + (parseInt(houtHowMuchTime[1]) * 60);
       
       if(hin === '0' && hout === '0'){
@@ -348,6 +429,10 @@ function calculateHours(hin, hout){
       }
 
       return totalTimeYouDid = secondsToHms(houtSeconds - hinSeconds); 
+=======
+      let houtSeconds = (parseInt(houtHowMuchTime[0]) * 60 * 60) + (parseInt(houtHowMuchTime[1]) * 60);      
+      return totleTimeYouDid = secondsToHms(houtSeconds - hinSeconds); 
+>>>>>>> 9bf346e7a8b424d718571d5bcbfa74a13e6e3269
 }
 
 function secondsToHms(d) {
@@ -373,7 +458,10 @@ function insertWorkday(u_user){
             let dateofhours = document.getElementById("dateofhours").value;
             let anyMessages = document.getElementById("anyMessages");
             let myHours = document.getElementById("myHours");
+<<<<<<< HEAD
             let companyName = document.getElementById("theCompanyName").innerText;
+=======
+>>>>>>> 9bf346e7a8b424d718571d5bcbfa74a13e6e3269
             
             let seprateDate = dateofhours.split("-");
             let theYear  = seprateDate[0];
@@ -395,7 +483,11 @@ function insertWorkday(u_user){
             return false;
             }
 
+<<<<<<< HEAD
             let params = "case=insert_hours&&hin=" + inhour + "&hout=" + outhour + "&hdate=" + dateofhours + "&huser=" + u_user + "&u_company_name=" + companyName;
+=======
+            let params = "case=insert_hours&&hin=" + inhour + "&hout=" + outhour + "&hdate=" + dateofhours + "&huser=" + u_user;
+>>>>>>> 9bf346e7a8b424d718571d5bcbfa74a13e6e3269
             xhttp.open("POST", url, true);
 
 
@@ -426,7 +518,11 @@ function insertWorkday(u_user){
               let hout = JSON.parse(this.responseText)[3];            
               let uid = JSON.parse(this.responseText)[4];
               createTable(hid, hdate, hin, hout, uid);               
+<<<<<<< HEAD
               updateCounters(totalMonthlyWorkingHours,  howMuchTimeIDid() ,totalMonthlyWorkingHours - howMuchTimeIDid() , document.getElementById("myHours").rows.length - howManySickDaysISee(), howManyFreeDaysIHave(), howMuchFreeDaysIDid(), howManySickDaysIHave(), howMuchSickDaysIDid());
+=======
+              updateCounters(totalMonthlyWorkingHours,  howMuchTimeIDid() ,totalMonthlyWorkingHours - howMuchTimeIDid() , document.getElementById("myHours").rows.length);
+>>>>>>> 9bf346e7a8b424d718571d5bcbfa74a13e6e3269
               selectOption(theMonth, theYear);
               setTimeout(()=>{
                 anyMessages.innerText = "";
@@ -438,6 +534,7 @@ function insertWorkday(u_user){
             xhttp.send(params);
 }
 
+<<<<<<< HEAD
 // Insert Sick Days
 
 function insertSickDays(u_user){   
@@ -550,6 +647,8 @@ function insertFreeDays(u_user){
 
 
 
+=======
+>>>>>>> 9bf346e7a8b424d718571d5bcbfa74a13e6e3269
 
 // Update Hours
 
@@ -574,11 +673,18 @@ function setFixerDetails(hid, uid) {
 
 function updateWorkday(hid, uid){    
   let fixInHour = document.getElementById("fixInHour").value;
+<<<<<<< HEAD
   let fixOutHour = document.getElementById("fixOutHour").value; 
   let theCompanyName = document.getElementById("theCompanyName").innerText; 
   var xhttp = new XMLHttpRequest();
   let url = "./functions/requests-hours.php";
   let params = "case=update_hours&&hid=" + hid + "&hin=" + fixInHour + "&hout=" + fixOutHour + "&company_name=" + theCompanyName;
+=======
+  let fixOutHour = document.getElementById("fixOutHour").value;  
+  var xhttp = new XMLHttpRequest();
+  let url = "./functions/requests-hours.php";
+  let params = "case=update_hours&&hid=" + hid + "&hin=" + fixInHour + "&hout=" + fixOutHour;
+>>>>>>> 9bf346e7a8b424d718571d5bcbfa74a13e6e3269
   xhttp.open("POST", url, true);  
   xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
   xhttp.onreadystatechange = function() {
@@ -589,8 +695,13 @@ function updateWorkday(hid, uid){
       theTds[1].innerText = JSON.parse(this.responseText)[1];
       theTds[2].innerText = JSON.parse(this.responseText)[2];
       calculateHours(JSON.parse(this.responseText)[1], JSON.parse(this.responseText)[2]); 
+<<<<<<< HEAD
       theTds[3].innerText = totalTimeYouDid;
       updateCounters(totalMonthlyWorkingHours,  howMuchTimeIDid() ,totalMonthlyWorkingHours - howMuchTimeIDid() , document.getElementById("myHours").rows.length - howManySickDaysISee(), howManyFreeDaysIHave(), howMuchFreeDaysIDid(), howManySickDaysIHave(), howMuchSickDaysIDid());      
+=======
+      theTds[3].innerText = totleTimeYouDid;
+      updateCounters(totalMonthlyWorkingHours,  howMuchTimeIDid() ,totalMonthlyWorkingHours - howMuchTimeIDid() , document.getElementById("myHours").rows.length);      
+>>>>>>> 9bf346e7a8b424d718571d5bcbfa74a13e6e3269
     }
   }}  
   xhttp.send(params);    
@@ -599,6 +710,7 @@ function updateWorkday(hid, uid){
 
 
 
+<<<<<<< HEAD
 // Add new comapny
 function addNewCompany(userId){    
   let newCompanyName = document.getElementById("newCompanyName").value;
@@ -702,21 +814,33 @@ function getAllCompanies(userId){
 
 
 
+=======
+>>>>>>> 9bf346e7a8b424d718571d5bcbfa74a13e6e3269
 // Delete Hours
 
 
 function deleteWorkday(did){     
   if(confirm("Are you sure you want to delete this?")){
+<<<<<<< HEAD
   let theCompanyName = document.getElementById("theCompanyName").innerText;  
   let xhttp = new XMLHttpRequest();
   let url = "./functions/requests-hours.php";        
   let params = "case=delete_hours&&h_id=" + did + "&company_name=" + theCompanyName;
+=======
+  var xhttp = new XMLHttpRequest();
+  let url = "./functions/requests-hours.php";        
+  let params = "case=delete_hours&&h_id=" + did;
+>>>>>>> 9bf346e7a8b424d718571d5bcbfa74a13e6e3269
   document.getElementById(did).remove();
   xhttp.open("POST", url, true);
   //Send the proper header information along with the request
   xhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');  
   xhttp.send(params);
+<<<<<<< HEAD
   updateCounters(totalMonthlyWorkingHours,  howMuchTimeIDid() ,totalMonthlyWorkingHours - howMuchTimeIDid() , document.getElementById("myHours").rows.length - howManySickDaysISee(), howManyFreeDaysIHave(), howMuchFreeDaysIDid(), howManySickDaysIHave(), howMuchSickDaysIDid());
+=======
+  updateCounters(totalMonthlyWorkingHours,  howMuchTimeIDid() ,totalMonthlyWorkingHours - howMuchTimeIDid() , document.getElementById("myHours").rows.length);
+>>>>>>> 9bf346e7a8b424d718571d5bcbfa74a13e6e3269
 };
   
 }
@@ -763,6 +887,7 @@ function sortByDate() {
 
 
 
+<<<<<<< HEAD
 // Download PDF
 
 // Set Company
@@ -799,6 +924,8 @@ function downloadPDF(){
 }
 
 
+=======
+>>>>>>> 9bf346e7a8b424d718571d5bcbfa74a13e6e3269
 
 
 

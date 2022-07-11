@@ -8,8 +8,12 @@ writeNote.addEventListener("click",()=>{
 
 function getNotes(u_user){    
     var xhttp = new XMLHttpRequest();
+<<<<<<< HEAD
     let theCompanyName = document.getElementById("theCompanyName").innerText;  
     let url = "./functions/requests-notes.php?getInfo=get_notes&uid=" + u_user + "&company_name=" + theCompanyName;      
+=======
+    let url = "./functions/requests-notes.php?getInfo=get_notes&uid=" + u_user;      
+>>>>>>> 9bf346e7a8b424d718571d5bcbfa74a13e6e3269
     xhttp.open("GET", url, true);
     xhttp.onreadystatechange = function() {      
     if (this.readyState == 4 && this.status == 200) {
@@ -20,17 +24,28 @@ function getNotes(u_user){
         let nicon = JSON.parse(this.responseText)[k][1];
         let ndesc = JSON.parse(this.responseText)[k][2];        
         let nuploaduser = JSON.parse(this.responseText)[k][3];
+<<<<<<< HEAD
         let cname = JSON.parse(this.responseText)[k][4];        
         let ndate = JSON.parse(this.responseText)[k][5];
         createNote(nid, nicon, ndesc, u_user, ndate, cname);        
+=======
+        let allusers = JSON.parse(this.responseText)[k][4];        
+        let ndate = JSON.parse(this.responseText)[k][5];
+        createNote(nid, nicon, ndesc, u_user, ndate, allusers);        
+>>>>>>> 9bf346e7a8b424d718571d5bcbfa74a13e6e3269
       }      
     
     }}; 
     
     xhttp.send();
   }
+<<<<<<< HEAD
   
   function createNote(nid, nicon, ndesc, nuploaduser){
+=======
+
+  function createNote(nid, nicon, ndesc, nuploaduser, ndate, allusers){
+>>>>>>> 9bf346e7a8b424d718571d5bcbfa74a13e6e3269
     let icon;    
 
     let noteDiv = document.createElement("div");
@@ -75,7 +90,11 @@ function getNotes(u_user){
     theIconRead.className = "fas fa-check-circle";
     iconRead.addEventListener("click",()=>{
         iconRead.style.color = "lightgreen";
+<<<<<<< HEAD
         markAsWatchedAndDelete(nid, nuploaduser);        
+=======
+        markAsWatchedAndDelete(nid, nuploaduser, allusers);        
+>>>>>>> 9bf346e7a8b424d718571d5bcbfa74a13e6e3269
     })
 
     iconRead.append(theIconRead);    
@@ -102,15 +121,22 @@ function getNotes(u_user){
     let url = "./functions/requests-notes.php";
     let nicon = document.getElementById("nicon").value;
     let ndesc = document.getElementById("ndesc").value;
+<<<<<<< HEAD
     let theCompanyName = document.getElementById("theCompanyName").innerText;  
 
     let params = "case=insert_notes&&ndesc=" + ndesc + "&nicon=" + nicon + "&nuser=" + u_user + "&company_name=" + theCompanyName;
+=======
+    
+
+    let params = "case=insert_notes&&ndesc=" + ndesc + "&nicon=" + nicon + "&nuser=" + u_user;
+>>>>>>> 9bf346e7a8b424d718571d5bcbfa74a13e6e3269
     xhttp.open("POST", url, true);
 
     //Send the proper header information along with the request
     xhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
 
     xhttp.onreadystatechange = function() {
+<<<<<<< HEAD
     if (this.readyState == 4 && this.status == 200) {       
       let nid = JSON.parse(this.responseText)[0];      
       let nicon = JSON.parse(this.responseText)[1];
@@ -119,6 +145,22 @@ function getNotes(u_user){
       let ndate = JSON.parse(this.responseText)[4];      
       let cname = JSON.parse(this.responseText)[5];      
       createNote(nid, nicon, ndesc, n_user_id, ndate, cname);
+=======
+    if (this.readyState == 4 && this.status == 200) {              
+      
+      if(this.responseText == "Sorry, someone already wrote the same message!"){                
+        alert(this.responseText);        
+        return false;
+      }
+      
+      let nid = JSON.parse(this.responseText)[0];      
+      let nicon = JSON.parse(this.responseText)[1];
+      let ndesc = JSON.parse(this.responseText)[2];      
+      let nuploaduser = JSON.parse(this.responseText)[3];
+      let ndate = JSON.parse(this.responseText)[4];      
+      let allUsers = JSON.parse(this.responseText)[5];      
+      createNote(nid, nicon, ndesc, u_user, ndate, allUsers);
+>>>>>>> 9bf346e7a8b424d718571d5bcbfa74a13e6e3269
     }
     };
 

@@ -23,7 +23,11 @@
   --breakpoint-xs: 0;
   --breakpoint-sm: 576px;
   --breakpoint-md: 768px;
+<<<<<<< HEAD
   --breakpoint-lg: 992px;
+=======
+  --breakpoint-lg: 993px;
+>>>>>>> 9bf346e7a8b424d718571d5bcbfa74a13e6e3269
   --breakpoint-xl: 1200px;
   --font-family-sans-serif: "Nunito", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
   --font-family-monospace: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
@@ -11415,12 +11419,15 @@ body.sidebar-toggled footer.sticky-footer {
   width: 100%;
 }
 
+<<<<<<< HEAD
 .companyNameInput {
   width: 100%;
   padding: 10px 20px;
   border-radius: 50px;
 }
 
+=======
+>>>>>>> 9bf346e7a8b424d718571d5bcbfa74a13e6e3269
 
 @media screen and (min-width: 1400px){
   .fixMonthsSelect {
