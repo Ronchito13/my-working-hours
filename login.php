@@ -68,7 +68,7 @@
               <div class="col-lg-6">
                 <div class="p-5">
                   <div class="text-center">
-                    <h1 class="h4 text-gray-900 mb-4">Login Marketing Team</h1>
+                    <h1 class="h4 text-gray-900 mb-4">Login</h1>
                   </div>
                   <form action="" method="post" class="user">
                     <div class="form-group">
@@ -85,12 +85,10 @@
                         <label class="custom-control-label" for="customCheck">Remember Me</label>
                       </div>
                     </div>
-                    <input type="submit" onclick="return checkFormLoginValidation()" id="form-shuk123" value="Login" class="btn btn-primary btn-user btn-block">
+                    <input type="submit" onclick="return checkFormLoginValidation()" id="form-shuk123" value="Login" class="btn btn-primary btn-user btn-block">                    
                     
-                    <hr>                    
 </form>
-                   <div class="text-center">
-                    <a class="small" href="forgot-password.php">Forgot Password?</a>
+                   <div class="text-center">                    
                     <p class="errMsgOfLogin" id="errMsgOfLogin"><?php echo $error ?></p>
                   </div>                   
                 </div>

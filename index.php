@@ -1,5 +1,13 @@
 <?php 
 include 'functions/session.php';
+
+$thisyear = date("Y");
+$thisMonth = date("m");
+$timenow = date("H:i");
+$today = date("Y-m-d");
+
+
+
 ?>
 
 
@@ -13,9 +21,8 @@ include 'functions/session.php';
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <meta name="description" content="">
-  <meta name="author" content="">
-
-  <title>Admin Manager - Marketing</title>
+  <meta name="author" content="Ron Dayan">
+  <title>Working Time Checker</title>
 
   <!-- Custom fonts for this template-->
   <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
@@ -24,66 +31,21 @@ include 'functions/session.php';
   <!-- Custom styles for this template-->
   <link href="css/sb-admin-2.css" rel="stylesheet">
 
+   
+  <!-- Custom styling --> 
+
+  <style>
+  .card-body {  
+  overflow-y: auto;
+}
+  </style>
+
 </head>
 
 <body id="page-top">
 
   <!-- Page Wrapper -->
-  <div id="wrapper">
-
-    <!-- Sidebar -->
-    <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
-
-      <!-- Sidebar - Brand -->
-      <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.php">
-        <div class="sidebar-brand-icon rotate-n-15">
-          <i class="fas fa-laugh-wink"></i>
-        </div>
-        <div id="lord<?php echo $u_id ?>" class="sidebar-brand-text mx-3"><?php echo $u_name ?></div>
-      </a>
-
-      <!-- Divider -->
-      <hr class="sidebar-divider my-0">
-
-      <!-- Nav Item - Dashboard -->
-      <li class="nav-item pointer active" id="dashboard">
-        <a class="nav-link" href="index.php">
-          <i class="fas fa-fw fa-tachometer-alt"></i>
-          <span>Dashboard</span></a>
-      </li>
-
-      <!-- Divider -->
-      <hr class="sidebar-divider">
-
-      <!-- Heading -->
-      <div class="sidebar-heading">
-        Menu
-      </div>
-
-      <!-- Nav Item - Hours Checker -->
-      <li class="nav-item pointer" id="workingHours">
-        <a class="nav-link" href="hours.php">
-          <i class="fas fa-fw fa-clock"></i>
-          <span>Working Hours</span></a>
-      </li>
-
-      <!-- Nav Item - Hours Checker -->
-      <li class="nav-item pointer" id="departureBudget">
-        <a class="nav-link" href="domains-management.php">
-          <i class="far fa-window-maximize"></i>
-          <span>Domains Management</span></a>
-      </li>      
-
-      <!-- Divider -->
-      <hr class="sidebar-divider d-none d-md-block">
-
-      <!-- Sidebar Toggler (Sidebar) -->
-      <div class="text-center d-none d-md-inline">
-        <button class="rounded-circle border-0" id="sidebarToggle"></button>
-      </div>
-
-    </ul>
-    <!-- End of Sidebar -->
+  <div id="wrapper">    
 
     <!-- Content Wrapper -->
     <div id="content-wrapper" class="d-flex flex-column">
@@ -93,7 +55,10 @@ include 'functions/session.php';
 
         <!-- Topbar -->
         <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
-
+        <div class="mr-2 d-none d-lg-inline text-gray-600 large">You are currently working at <span style="font-weight: bold;" id="theCompanyName"><?php echo $u_company_name ?></span></div>
+        <button class="btn btn-danger" id="editComapnyName" style="float: left;" data-toggle="modal" data-target="#editCompanyNameLoader" onclick="getAllCompanies(<?php echo $u_id ?>);">Edit Company Info</button>                                           
+        <button class="btn btn-secondary" id="addComapnyName" style="float: left; margin: 0 15px;" data-toggle="modal" data-target="#addCompanyNameLoader">Add New Company</button>                                           
+        
           <!-- Sidebar Toggle (Topbar) -->
           <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
             <i class="fa fa-bars"></i>
@@ -119,7 +84,7 @@ include 'functions/session.php';
             <!-- Nav Item - User Information -->
             <li class="nav-item dropdown no-arrow">
               <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <span class="mr-2 d-none d-lg-inline text-gray-600 small"><?php echo $u_name ?></span>
+                <span class="mr-2 d-none d-lg-inline text-gray-600 small" id="userName"><?php echo $u_name ?></span>
                 <img class="img-profile rounded-circle" src="https://source.unsplash.com/QAB-WJcbgJk/60x60">
               </a>
               <!-- Dropdown - User Information -->
@@ -143,147 +108,316 @@ include 'functions/session.php';
 
           <!-- Page Heading -->
           <div class="d-sm-flex align-items-center justify-content-between mb-4">
-            <h1 class="h3 mb-0 text-gray-800" id="pageTitle">Dashboard</h1>
-            <a href="downloadReport.php" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">Generate Report <i class="fas fa-download fa-sm text-white-50"></i></a>
+            <h1 class="h3 mb-0 text-gray-800" id="pageTitle">Working Hours</h1>
+            <button type="button" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm" onclick="downloadPDF()">Generate Report <i class="fas fa-download fa-sm text-white-50"></i></button>
           </div>
 
           <!-- Content Row -->
           <div class="row">
 
-            <!-- Earnings (Monthly) Card Example -->
+            <!-- Expect monthly working hours -->
             <div class="col-xl-3 col-md-6 mb-4">
               <div class="card border-left-primary shadow h-100 py-2">
                 <div class="card-body">
                   <div class="row no-gutters align-items-center">
                     <div class="col mr-2">
-                      <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Departure Badget (Monthly)</div>
-                      <div class="h5 mb-0 font-weight-bold text-gray-800">$10000</div>
+                      <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Expect monthly working hours</div>
+                      <div class="h5 mb-0 font-weight-bold text-gray-800" id="hoursOfWork"></div>
                     </div>
                     <div class="col-auto">
-                      <i class="fas fa-calendar fa-2x text-gray-300"></i>
+                      <i class="fas fa-clock fa-2x text-gray-300"></i>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
 
-            <!-- Earnings (Monthly) Card Example -->
+            <!-- How much did you work that month? -->
             <div class="col-xl-3 col-md-6 mb-4">
               <div class="card border-left-success shadow h-100 py-2">
                 <div class="card-body">
                   <div class="row no-gutters align-items-center">
                     <div class="col mr-2">
-                      <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Budget Use (-- This Month -- This Year)</div>
-                      <div class="h5 mb-0 font-weight-bold text-gray-800">$5,500</div>
+                      <div class="text-xs font-weight-bold text-success text-uppercase mb-1">How much did you work that month?</div>
+                      <div class="h5 mb-0 font-weight-bold text-gray-800" id="hoursIDid"></div>
                     </div>
                     <div class="col-auto">
-                      <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
+                      <i class="fas fa-user-clock fa-2x text-gray-300"></i>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
 
-            <!-- Earnings (Monthly) Card Example -->
+            <!-- How many hours left to complete this month -->
             <div class="col-xl-3 col-md-6 mb-4">
               <div class="card border-left-info shadow h-100 py-2">
                 <div class="card-body">
                   <div class="row no-gutters align-items-center">
                     <div class="col mr-2">
-                      <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Monthly Tasks</div>
+                      <div class="text-xs font-weight-bold text-info text-uppercase mb-1">How many hours left to complete this month</div>
                       <div class="row no-gutters align-items-center">
                         <div class="col-auto">
-                          <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">50</div>
+                          <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800" id="hoursLeftToDo"></div>
                         </div>
                         <div class="col">
                           <div class="progress progress-sm mr-2">
-                            <div class="progress-bar bg-info" role="progressbar" style="width: 50%" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
+                            <div class="progress-bar bg-info" role="progressbar" id="precentOfTime" aria-valuemin="0" aria-valuemax="100"></div>
                           </div>
                         </div>
                       </div>
                     </div>
                     <div class="col-auto">
-                      <i class="fas fa-clipboard-list fa-2x text-gray-300"></i>
+                      <i class="fas fa-hourglass-half fa-2x text-gray-300"></i>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
 
-            <!-- Pending Requests Card Example -->
+            <!-- How many days did you work this month? -->
             <div class="col-xl-3 col-md-6 mb-4">
               <div class="card border-left-warning shadow h-100 py-2">
                 <div class="card-body">
                   <div class="row no-gutters align-items-center">
                     <div class="col mr-2">
-                      <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">Tasks Complete</div>
-                      <div class="h5 mb-0 font-weight-bold text-gray-800">18</div>
+                      <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">How many days did you work this month?</div>
+                      <div class="h5 mb-0 font-weight-bold text-gray-800" id="daysOfWork"></div>
                     </div>
                     <div class="col-auto">
-                      <i class="fas fa-clipboard fa-2x text-gray-300"></i>
+                      <i class="fas fa-calendar-day fa-2x text-gray-300"></i>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
+
+
+          <div class="row">
+            <!-- New Dash Row -->
+
+          <!-- How Many free days I have? -->
+          <div class="col-xl-3 col-md-6 mb-4">
+              <div class="card border-left-danger shadow h-100 py-2">
+                <div class="card-body">
+                  <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                      <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">How many free day I have? </div>
+                      <div class="h5 mb-0 font-weight-bold text-gray-800" id="freeDaysIHave">0</div>
+                    </div>
+                    <div class="col-auto">
+                      <i class="far fa-smile-beam fa-2x text-gray-300"></i>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Free days I used this month -->
+            <div class="col-xl-3 col-md-6 mb-4">
+              <div class="card shadow h-100 py-2" style="border-left: 0.25rem solid #6e707e !important;">
+                <div class="card-body">
+                  <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                      <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Free days I used this month</div>
+                      <div class="h5 mb-0 font-weight-bold text-gray-800" id="freeDaysIDid">0</div>
+                    </div>
+                    <div class="col-auto">
+                      <i class="fas fa-sun fa-2x text-gray-300"></i>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- How many sick days I have? -->
+            <div class="col-xl-3 col-md-6 mb-4">
+              <div class="card shadow h-100 py-2" style="border-left: 0.25rem solid #c717e5 !important;">
+                <div class="card-body">
+                  <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                      <div class="text-xs font-weight-bold text-info text-uppercase mb-1">How many sick days I have?</div>
+                      <div class="row no-gutters align-items-center">
+                        <div class="col-auto">
+                          <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800" id="sickDaysIHave">0</div>
+                        </div>                        
+                      </div>
+                    </div>
+                    <div class="col-auto">
+                      <i class="fas fa-head-side-virus fa-2x text-gray-300"></i>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Sick days I used this month -->
+            <div class="col-xl-3 col-md-6 mb-4">
+              <div class="card shadow h-100 py-2" style="border-left: 0.25rem solid #3ef5f6 !important;">
+                <div class="card-body">
+                  <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                      <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">Sick days I used this month</div>
+                      <div class="h5 mb-0 font-weight-bold text-gray-800" id="sickDaysIDid">0</div>
+                    </div>
+                    <div class="col-auto">
+                      <i class="fas fa-head-side-cough fa-2x text-gray-300"></i>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          </div>
+
+
 
           <!-- Content Row -->
 
           <div class="row">
 
             <!-- Area Chart -->
-            <div class="col-xl-8 col-lg-7">
+            <div class="col-xl-6 col-lg-7">
               <div class="card shadow mb-4">
                 <!-- Card Header - Dropdown -->
                 <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                  <h6 class="m-0 font-weight-bold text-primary">Budget Overview</h6>                  
+                  <h6 class="m-0 font-weight-bold text-primary">Hours Overview Table</h6>
+                  <p class="confirmMsg" id="confirmMsg"></p>                      
+                  <select name="months" class="fixMonthsSelect" id="months" onchange="getWorkdaysByDates(<?php echo $u_id ?>, 0, 0)">
+                  <option value="1">January</option>
+                  <option value="2">February</option>
+                  <option value="3">March</option>
+                  <option value="4">April</option>
+                  <option value="5">May</option>
+                  <option value="6">June</option>
+                  <option value="7">July</option>
+                  <option value="8">August</option>
+                  <option value="9">September</option>
+                  <option value="10">October</option>
+                  <option value="11">November</option>
+                  <option value="12">December</option>
+                  </select>
+                  <select name="years" id="years" onchange="getWorkdaysByDates(<?php echo $u_id ?>, 0, 0)">
+                  <option value="2026">2026</option>
+                  <option value="2025">2025</option>
+                  <option value="2024">2024</option>
+                  <option value="2023">2023</option>
+                  <option value="2022">2022</option>
+                  <option value="2021" selected>2021</option>
+                  <option value="2020">2020</option>
+                  <option value="2019">2019</option>                  
+                  </select>
+              
+                  
+
+ 
                 </div>
                 <!-- Card Body -->
-                <div class="card-body">
+                <div class="card-body" style="min-height: 426px;">
                   <div class="chart-area">
-                    <canvas id="myAreaChart"></canvas>
+                  <table border="1" id="theTableOfHours" width="100%">
+
+<tr>
+<th onclick="sortByDate()" id="sortDateButton" class="pointer">↓ Date</th>
+<th>Start At</th>
+<th>Finish At</th>
+<th>Total Time</th>
+<th>Update</th>
+<th>Delete</th>
+</tr>
+<tbody id="myHours">
+</tbody>
+</table>
+<!-- DivTable.com -->
                   </div>
                 </div>
               </div>
             </div>
 
-            <!-- Pie Chart -->
-            <div class="col-xl-4 col-lg-5">
+            
+            <div class="col-xl-6 col-lg-5">
+
+            <!-- Checking hours card -->
+
               <div class="card shadow mb-4">
                 <!-- Card Header - Dropdown -->
                 <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                  <h6 class="m-0 font-weight-bold text-primary">Budget Expenses</h6>                  
+                  <h6 class="m-0 font-weight-bold text-primary">Hours Informer</h6>                  
+                  <p class="anyMessages" id="anyMessages"></p>                  
                 </div>
                 <!-- Card Body -->
-                <div class="card-body">
-                  <div class="chart-pie pt-4 pb-2">
-                    <canvas id="myPieChart"></canvas>
-                  </div>
-                  <div class="mt-4 text-center small">
-                    <span class="mr-2">
-                      <i class="fas fa-circle text-primary"></i> Domains
-                    </span>
-                    <span class="mr-2">
-                      <i class="fas fa-circle text-success"></i> Servers
-                    </span>
-                    <span class="mr-2">
-                      <i class="fas fa-circle text-info"></i> SEO
-                    </span>
-                    <span class="mr-2">
-                      <i class="fas fa-circle text-alert"></i> PPC
-                    </span>
-                    <span class="mr-2">
-                      <i class="fas fa-circle text-warning"></i> External Services
-                    </span>
-                    <span class="mr-2">
-                      <i class="fas fa-circle text-danger"></i> Design
-                    </span>
-                  </div>
+                <div class="card-body row">                  
+                  <div class="col-xl-3 col-md-3 text-center small">
+                    <label for="inhour">Start: <br>
+                    <input type="time" min="08:00" max="19:00" value="<?php echo $timenow ?>" name="inhour" id="inhour"> 
+                    </label>
+                  </div>  
+                  <div class="col-xl-3 col-md-3 text-center small">
+                    <label for="inhour">End: <br>
+                    <input type="time" min="08:00" max="19:00" value="18:00" name="outhour" id="outhour"> 
+                    </label>
+                  </div>  
+                  <div class="col-xl-3 col-md-3 text-center small">
+                    <label for="inhour">date: <br>
+                    <input type="date" value="<?php echo date('Y-m-d') ?>" name="dateofhours" id="dateofhours"> 
+                    </label>
+                  </div> 
+                  <div class="col-xl-3 col-md-12 mt-3 text-center small">                    
+                    <input type="submit" value="Add Work Day" name="workday" id="workday"  onclick='insertWorkday(<?php echo $u_id ?>)'> 
+                    </label>
+                  </div>                    
+                </div>                
+              </div> 
+              
+              <!-- Checking sick days card -->
+              
+              <div class="col-xl-12 col-sm-12 card shadow mb-4" style="display: inline-block;">
+
+                <!-- Sick day informer -->
+                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                  <h6 class="m-0 font-weight-bold text-primary">Sick day informer</h6>                   
                 </div>
-              </div>
+                <!-- Card Body -->
+                <div class="card-body row">                    
+                  <div class="col-xl-3 col-md-3 text-center small">
+                    <label for="inhour">date: <br>
+                    <input type="date" value="<?php echo date('Y-m-d') ?>" name="dateofSickDays" id="dateofSickDays"> 
+                    </label>
+                  </div> 
+                  <div class="col-xl-9 col-md-12 mt-3 text-right small">                    
+                    <input type="submit" value="Add Sick Day" name="sickday" id="sickday"  onclick='insertSickDays(<?php echo $u_id ?>)'> 
+                    </label>
+                  </div>                    
+                </div>                
+              </div>   
+
+
+              
+              
+              <div class="col-xl-12 col-sm-12 card shadow mb-4" style="display: inline-block;">
+              
+                <!-- Free day informer -->
+                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                  <h6 class="m-0 font-weight-bold text-primary">Free day informer</h6>                                    
+                </div>
+                <!-- Card Body -->
+                <div class="card-body row">                    
+                  <div class="col-xl-3 col-md-3 text-center small">
+                    <label for="inhour">date: <br>
+                    <input type="date" value="<?php echo date('Y-m-d') ?>" name="dateofFreeDays" id="dateofFreeDays"> 
+                    </label>
+                  </div> 
+                  <div class="col-xl-9 col-md-12 mt-3 text-right small">                    
+                    <input type="submit" value="Add Free Day" name="freeday" id="freeday"  onclick='insertFreeDays(<?php echo $u_id ?>)'> 
+                    </label>
+                  </div>                    
+                </div>                
+              </div>   
+
+
             </div>
-          </div>
+          </div>        
 
           <!-- Content Row -->
           <div class="row">
@@ -294,29 +428,10 @@ include 'functions/session.php';
               <!-- Project Card Example -->
               <div class="card shadow mb-4">
                 <div class="card-header py-3">
-                  <h6 class="m-0 font-weight-bold text-primary">Projects</h6>
+                  <h6 class="m-0 font-weight-bold text-primary">Year Calendar</h6>
                 </div>
-                <div class="card-body">
-                  <h4 class="small font-weight-bold">Server Migration <span class="float-right">20%</span></h4>
-                  <div class="progress mb-4">
-                    <div class="progress-bar bg-danger" role="progressbar" style="width: 20%" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100"></div>
-                  </div>
-                  <h4 class="small font-weight-bold">Sales Tracking <span class="float-right">40%</span></h4>
-                  <div class="progress mb-4">
-                    <div class="progress-bar bg-warning" role="progressbar" style="width: 40%" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100"></div>
-                  </div>
-                  <h4 class="small font-weight-bold">Customer Database <span class="float-right">60%</span></h4>
-                  <div class="progress mb-4">
-                    <div class="progress-bar" role="progressbar" style="width: 60%" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"></div>
-                  </div>
-                  <h4 class="small font-weight-bold">Payout Details <span class="float-right">80%</span></h4>
-                  <div class="progress mb-4">
-                    <div class="progress-bar bg-info" role="progressbar" style="width: 80%" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100"></div>
-                  </div>
-                  <h4 class="small font-weight-bold">Account Setup <span class="float-right">Complete!</span></h4>
-                  <div class="progress">
-                    <div class="progress-bar bg-success" role="progressbar" style="width: 100%" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
-                  </div>
+                <div class="card-body" style="padding: 5px;">
+                <iframe src="https://calendar.google.com/calendar/embed?height=600&amp;wkst=1&amp;bgcolor=%23ffffff&amp;ctz=Europe%2FLondon&amp;src=Y18wMjVza29iZDUxN2ZnYm9ycWc5ZHV0bzV1Z0Bncm91cC5jYWxlbmRhci5nb29nbGUuY29t&amp;src=ZW4udWsjaG9saWRheUBncm91cC52LmNhbGVuZGFyLmdvb2dsZS5jb20&amp;color=%239E69AF&amp;color=%230B8043&amp;showTitle=0&amp;showNav=1&amp;showDate=1&amp;showPrint=0&amp;showTabs=0&amp;showCalendars=0&amp;showTz=0" style="border:solid 1px #777; margin-left: 20px;" width="95%" height="500" frameborder="0" scrolling="no"></iframe>
                 </div>
               </div>
               
@@ -327,11 +442,20 @@ include 'functions/session.php';
               <!-- Notes -->
               <div class="card shadow mb-4">
                 <div class="card-header py-3">
-                  <h6 class="m-0 font-weight-bold text-primary">Marketing Team Notes</h6>
+                  <h6 class="m-0 font-weight-bold text-primary" style="display: inline;">Notes about working hours</h6>
+                  <button class="writeNote" id="writeNote" style="float: right;" data-toggle="modal" data-target="#theNoteLoader">Write A Note</button>                                   
                 </div>
-                <div class="card-body">
-                  <p><i class="fas fa-sticky-note"></i> We have A new marketing tool, please keep on the track! </p>
-                  <p class="mb-0">Before working with this theme, you should become familiar with the Bootstrap framework, especially the utility classes.</p>
+                <div class="card-body" id="notesZone">
+                  
+                  <!-- <div class="row notes">
+                          <div class="col-xl-1 col-md-1 text-center medium">
+                          <i class="fas fa-sticky-note"></i>                            
+                          </div>                          
+                          <div class="col-xl-11 col-md-11 medium">                          
+                            <p> This october, there is october fest in gemany and we are in israel! </p>                  
+                          </div>                          
+                  </div>                   -->
+
                 </div>
               </div>
 
@@ -341,24 +465,92 @@ include 'functions/session.php';
         </div>
         <!-- /.container-fluid -->
 
-      </div>
-      <!-- End of Main Content -->
-
-
-           
-
-
-        <!-- End of Main Content -->
-
-      <!-- Footer -->
+        <!-- Footer -->
       <footer class="sticky-footer bg-white">
         <div class="container my-auto">
           <div class="copyright text-center my-auto">
-          <span>Copyright &copy; rom-marketing.com - marketing department 2020</span>
+          <span>Copyright &copy; Ron Dayan - <?php echo date("Y"); ?></span>
           </div>
         </div>
       </footer>
       <!-- End of Footer -->
+
+      </div>
+      <!-- End of Main Content -->
+
+
+
+      
+<!-- Modal of the hours -->
+
+<div class="modal fade" id="theFixer" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">      
+        <h5 class="modal-title" id="fixDate">Modal title</h5>
+        <div name="theId"></div>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">        
+        <label>Start At: <input type="time" id="fixInHour" class="fixInputOfTime"></label>
+        <label style="float: right;">Finish At: <input type="time" id="fixOutHour" class="fixInputOfTime"></label>        
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" data-dismiss="modal" id="updateWorkdayBtn">Update changes</button>
+      </div>      
+    </div>
+  </div>
+</div>
+
+
+<!-- Modal of the Notes -->
+
+<div class="modal fade" id="theNoteLoader" tabindex="-1" aria-labelledby="modalNotes" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">      
+        <h5 class="modal-title" id="fixDate">Write a Note for the team:</h5>
+        <div name="theId"></div>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">        
+        <label>
+        <select name="nicon" id="nicon">
+        <option value="0" disabled selected>Choose level for message</option>
+        <option value="n1">Urgent!</option>
+        <option value="n2">Very Important</option>
+        <option value="n3">Important</option>
+        <option value="n4">Regular Note</option>
+        <option value="n5">By the way message</option>
+        </select>
+        
+        </label>
+        <label style="float: right;">Message: <textarea id="ndesc" name="ndesc" rows="4" cols="50"></textarea></label>        
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" data-dismiss="modal" id="submitNote" onclick="insertNote(<?php echo $u_id ?>)">Submit</button>
+      </div>      
+    </div>
+  </div>
+
+  <!-- End of Main Content --> 
+  
+  
+
+   
+
+
+</div>
+           
+
+
+        
 
     </div>
     <!-- End of Content Wrapper -->
@@ -390,30 +582,147 @@ include 'functions/session.php';
     </div>
   </div>
 
-  <!-- Adding the functions JS -->
-  <script src="./js/functions.js"></script>
 
-  <!-- Bootstrap core JavaScript-->
-  <script src="./vendor/jquery/jquery.min.js"></script>
-  <script src="https://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
-  <script src="./vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <!-- Modal of Company Name -->
 
-  <!-- Core plugin JavaScript-->
-  <script src="./vendor/jquery-easing/jquery.easing.min.js"></script>
 
-  <!-- Custom scripts for all pages-->
-  <script src="./js/sb-admin-2.min.js"></script>
+  <div class="modal fade" id="editCompanyNameLoader" tabindex="-1" aria-labelledby="modalComapnyName" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">      
+        <h5 class="modal-title" id="modalComapnyName">Add / Edit your company info:</h5>
+        <div name="theId"></div>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body"> 
+      
+        <div class="row">
+          <div class="col-7">
+          <h5 style="padding-left: 10px; margin: 20px;">Current workplace:</h5>
+          </div>
+          <div class="col-5">
+          <select name="selectCompanyName" id="selectCompanyName" style="margin: 18px 0;" onchange="setCompany(<?php echo $u_id ?>,this.value);">
+        <option id="theChoosenSelectedCompnay" value="<?php echo $u_company_name ?>" selected><?php echo $u_company_name ?></option>        
+        </select>  
+          </div>        
+        </div>
+                  
+        <hr>
+        
 
-  <!-- Page level plugins -->
-  <script src="./vendor/chart.js/Chart.min.js"></script>
+        <p style="padding-left: 10px; margin: 20px 0;">Start of work: <span id="startDateOfWork"><?php echo $u_start_date ?></span></p>
+      <label style="padding-left: 10px; margin-right: 10px;"> Change date of begin:
+      <input type="date" name="editCompanyStartDate" id="editCompanyStartDate" value="<?php echo $u_start_date ?>" onchange="setNewCompanyStartDate(<?php echo $u_id ?>, this.value)"/>               
+      </label>
 
-   <!-- Page level custom scripts -->
-  <script src="./js/demo/chart-area-demo.js"></script>
-  <script src="./js/demo/chart-pie-demo.js"></script>
+      <hr>
+        
+      <label style="padding-left: 10px; margin-right: 10px;"> Monthly Hours of work (A Month):
+      <input type="number" name="updateHoursOfWork" id="updateHoursOfWork" placeholder="186" value="186" onchange="updateHoursOfWork(<?php echo $u_id ?>, this.value)"/>               
+      </label>
 
+      <hr>
+        
+      <label style="padding-left: 10px; margin-right: 10px;"> Free days (A Year):
+      <input type="number" name="updateFreeDays" id="updateFreeDays" placeholder="12" value="12" onchange="updateFreeDays(<?php echo $u_id ?>, this.value)"/>               
+      </label>
+
+      <hr>
+        
+      <label style="padding-left: 10px; margin-right: 10px;"> Sick days (A Year):
+      <input type="number" name="updateSickDays" id="updateSickDays" placeholder="12" value="12" onchange="updateSickDays(<?php echo $u_id ?>, this.value)"/>               
+      </label>
+
+
+      </div>
+
+
+
+      <div class="modal-footer">      
+        <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="setNewNumbers();">Save</button>
+      </div>      
+    </div>
+  </div>
+</div>
   
 
-    
+  <!-- End of edit Company Name -->  
+
+
+
+  <!-- Modal of Add Company Name -->
+
+
+  <div class="modal fade" id="addCompanyNameLoader" tabindex="-1" aria-labelledby="modalComapnyName" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">      
+        <h5 class="modal-title" id="modalComapnyName">Add new company info:</h5>
+        <div name="theId"></div>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">         
+
+        <div class="row">
+          <div class="col-12">
+          <input type="text" class="companyNameInput" name="newCompanyName" id="newCompanyName" placeholder="Company Name..."/>
+          </div>          
+        </div>        
+      
+        <hr>
+        
+      <label style="padding-left: 10px; margin-right: 10px;"> Start of work:
+      <input type="date" name="addCompanyStartDate" id="addCompanyStartDate" value="<?php echo $today ?>"/>               
+      </label>
+      </div>
+
+
+
+      <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      <button class="btn btn-primary" data-dismiss="modal" onclick="addNewCompany(<?php echo $u_id ?>)">Add company</button>               
+      </div>      
+    </div>
+  </div>
+  <input type="hidden" id="theUserId" value="<?php echo $u_id ?>" />
+</div>
+  
+
+  <!-- End of add Company Name --> 
+
+
+
+  <!-- Adding the functions JS -->
+  <script src="js/functions.js"></script>
+
+  <!-- Adding the functions JS -->
+  <script src="js/requestsHours.js"></script>  
+  <script src="js/requestsNotes.js"></script>
+
+  <!-- Bootstrap core JavaScript-->
+  <script src="vendor/jquery/jquery.min.js"></script>
+  <script src="https://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
+  <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+  <!-- Core plugin JavaScript-->
+  <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
+
+  <!-- Custom scripts for all pages-->
+  <script src="js/sb-admin-2.min.js"></script>
+
+ 
+
+<!-- Call workdays -->
+<script>
+selectOption(<?php echo $thisMonth ?>, <?php echo $thisyear ?>);
+getWorkdaysByDates(<?php echo $u_id ?>, <?php echo $thisMonth ?>, <?php echo $thisyear ?>);
+getNotes(<?php echo $u_id ?>);
+</script>
+   
 
 
 </body>
