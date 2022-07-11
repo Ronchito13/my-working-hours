@@ -1,4 +1,4 @@
-# It's a small php project
+# Working hours project
 
 PHP project to checkout working hours
 
